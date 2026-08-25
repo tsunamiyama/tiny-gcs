@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 from pymavlink import mavutil
-from mavLinker import MavLinker
+from mav_linker import MavLinker
 from telemetry import build_telemetry
 
 
