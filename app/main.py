@@ -3,8 +3,8 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from vehicle import VehicleConnection
-from controller import router
+from app.vehicle import VehicleConnection
+from app.controller import router
 
 async def _bring_up(vehicle: VehicleConnection) -> None:
     """Connect to PX4 and start the readers, off the startup path so

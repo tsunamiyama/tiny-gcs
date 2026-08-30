@@ -1,0 +1,27 @@
+# Project metadata and tool configuration for the GCS backend.
+# Runtime/dev dependencies deliberately live in requirements.txt and
+# requirements-dev.txt (where Docker and deployment tooling expect them),
+# not in [project.dependencies] — this file is for metadata and tool config.
+
+[project]
+name = "gcs-backend"
+version = "0.1.0"
+description = "Web-based Ground Control Station — telemetry + command backend for PX4."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+# Where the tests live.
+testpaths = ["tests"]
+
+# Put the project root (this dir) on sys.path so `from app.schema import ...`
+# resolves without installing the package or setting PYTHONPATH by hand.
+pythonpath = ["."]
+
+# Test discovery patterns (these match pytest's defaults; stated explicitly
+# so the collection rules are visible rather than implied).
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Default CLI options: verbose output, compact tracebacks.
+addopts = "-v --tb=short"

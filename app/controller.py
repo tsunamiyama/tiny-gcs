@@ -2,7 +2,7 @@ import asyncio
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from vehicle import VehicleConnection
+from app.vehicle import VehicleConnection
 
 # How often we push a telemetry frame to the client, independent of
 # the rates at which MAVSDK's streams update the cache.

@@ -2,7 +2,7 @@ import asyncio
 import logging
 from mavsdk import System
 
-from schema import (
+from app.schema import (
     TelemetryState,
     Position,
     Attitude,
