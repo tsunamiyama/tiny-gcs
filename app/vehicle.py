@@ -55,6 +55,18 @@ class VehicleConnection:
             task.cancel()
         await asyncio.gather(*self._tasks, return_exceptions=True)
 
+    async def arm(self) -> None:
+        await self._drone.action.arm()
+
+    async def takeoff(self) -> None:
+        await self._drone.action.takeoff()
+
+    async def land(self) -> None:
+        await self._drone.action.land()
+
+    async def return_to_launch(self) -> None:
+        await self._drone.action.return_to_launch()
+
     # --- telemetry stream readers -----------------------------------
 
     async def _watch_position(self) -> None:
@@ -92,7 +104,3 @@ class VehicleConnection:
     async def _watch_connection(self) -> None:
         async for state in self._drone.core.connection_state():
             self.state.connected = state.is_connected
-
-    # --- commands (Phase 3) -----------------------------------------
-    # arm / takeoff / land / RTL will live here, issued over the same
-    # self._drone connection via self._drone.action.*

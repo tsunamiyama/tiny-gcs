@@ -1,11 +1,8 @@
 # Python bytecode
 __pycache__/
-*.py[cod]
 
 # Virtual environments
-venv/
-.venv/
-env/
+tiny-gcs-venv/
 
 # pytest / coverage
 .pytest_cache/

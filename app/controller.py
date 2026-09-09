@@ -1,7 +1,7 @@
 import asyncio
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-
+from fastapi import APIRouter, Depends, HTTPException, Request, WebSocket, WebSocketDisconnect
+from mavsdk.action import ActionError
 from app.vehicle import VehicleConnection
 
 # How often we push a telemetry frame to the client, independent of
@@ -29,3 +29,41 @@ async def telemetry_ws(websocket: WebSocket) -> None:
     except WebSocketDisconnect:
         # Client went away; nothing to unwind (no registration to undo).
         pass
+
+def get_vehicle(request: Request) -> VehicleConnection:
+    vehicle: VehicleConnection = request.app.state.vehicle
+    if not vehicle.state.connected:
+        raise HTTPException(status_code=503, detail="vehicle not connected")
+    return vehicle
+
+@router.post("/command/arm", status_code=202)
+async def arm(vehicle: VehicleConnection = Depends(get_vehicle)):
+    try:
+        await vehicle.arm()
+        return {"status": "accepted", "command": "arm"}
+    except ActionError as e:
+        raise HTTPException(status_code=409, detail=str(e))
+
+@router.post("/command/takeoff", status_code=202)
+async def takeoff(vehicle: VehicleConnection = Depends(get_vehicle)):
+    try:
+        await vehicle.takeoff()
+        return {"status": "accepted", "command": "takeoff"}
+    except ActionError as e:
+        raise HTTPException(status_code=409, detail=str(e))
+
+@router.post("/command/land", status_code=202)
+async def land(vehicle: VehicleConnection = Depends(get_vehicle)):
+    try:
+        await vehicle.land()
+        return {"status": "accepted", "command": "land"}
+    except ActionError as e:
+        raise HTTPException(status_code=409, detail=str(e))
+
+@router.post("/command/rtl", status_code=202)
+async def return_to_launch(vehicle: VehicleConnection = Depends(get_vehicle)):
+    try:
+        await vehicle.return_to_launch()
+        return {"status": "accepted", "command": "return to launch"}
+    except ActionError as e:
+        raise HTTPException(status_code=409, detail=str(e))
