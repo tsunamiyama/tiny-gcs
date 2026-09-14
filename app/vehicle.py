@@ -26,7 +26,15 @@ class VehicleConnection:
         self.state = TelemetryState()
         self._tasks: list[asyncio.Task] = []
 
-    async def connect(self) -> None:
+    @property
+    def name(self) -> str:
+        return "vehicle"
+
+    @property
+    def healthy(self) -> bool:
+        return self.state.connected
+
+    async def _connect(self) -> None:
         """Connect to PX4 and block until the link is up."""
         await self._drone.connect(system_address=self._system_address)
 
@@ -38,7 +46,8 @@ class VehicleConnection:
 
         logger.info(f"Vehicle Connected on {self._system_address}")
 
-    def start(self) -> None:
+    async def start(self) -> None:
+        await self._connect()
         """Launch one background task per telemetry stream."""
         self._tasks = [
             asyncio.create_task(self._watch_position()),
